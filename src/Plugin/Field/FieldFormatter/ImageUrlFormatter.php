@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\image_url_formatter\Plugin\Field\FieldFormatter\ImageUrlFormatter.
- */
 
 namespace Drupal\image_url_formatter\Plugin\Field\FieldFormatter;
 
