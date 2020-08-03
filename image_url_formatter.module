@@ -37,15 +37,10 @@ function image_url_formatter_theme() {
  */
 function template_preprocess_image_url_formatter(&$variables) {
   $item = $variables['item'];
-  // drupal_set_message(var_export($item,true));
   $output = $item->entity->url();
-  //drupal_set_message('entity->url:' .  $output);
   if ($variables['image_style']) {
     $image['style_name'] = $variables['image_style'];
-	//drupal_set_message('style_name:' .  $image['style_name']);
     $output = ImageStyle::load($image['style_name'])->buildUrl($item->entity->getFileUri());
-	//drupal_set_message('output:' .  $output);
-	//drupal_set_message('item uri:' .   $item->entity->getFileUri());
   }
   
   $url_type = isset($variables['url_type']) ? $variables['url_type'] : 0;
