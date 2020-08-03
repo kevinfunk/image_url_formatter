@@ -42,7 +42,7 @@ function template_preprocess_image_url_formatter(&$variables) {
     $image['style_name'] = $variables['image_style'];
     $output = ImageStyle::load($image['style_name'])->buildUrl($item->entity->getFileUri());
   }
-  
+
   $url_type = isset($variables['url_type']) ? $variables['url_type'] : 0;
   if ($url_type == 1){
     $output = str_replace($GLOBALS['base_url'], '', $output);
@@ -50,7 +50,7 @@ function template_preprocess_image_url_formatter(&$variables) {
   elseif ($url_type == 2){
      $output = str_replace($GLOBALS['base_url'] . '/', '', $output);
   }
-  
+
   // The link path and link options are both optional, but for the options to be
   // processed, the link path must at least be an empty string.
   if (isset($variables['path']['path'])) {
