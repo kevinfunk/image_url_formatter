@@ -4,7 +4,7 @@
  * @file
  * Add an URL formatter for image field
  */
-use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Link;
 use Drupal\image\Entity\ImageStyle;
 
 
@@ -12,16 +12,16 @@ use Drupal\image\Entity\ImageStyle;
  * Implements hook_theme().
  */
 function image_url_formatter_theme() {
-  return array(
-    'image_url_formatter' => array(
-      'variables' => array(
+  return [
+    'image_url_formatter' => [
+      'variables' => [
         'item' => NULL,
         'url' => NULL,
         'image_style' => NULL,
         'url_type' => NULL,
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 }
 
 /**
@@ -60,10 +60,10 @@ function template_preprocess_image_url_formatter(&$variables) {
   // processed, the link path must at least be an empty string.
   if (isset($variables['path']['path'])) {
     $path = $variables['path']['path'];
-    $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();
+    $options = isset($variables['path']['options']) ? $variables['path']['options'] : [];
     // When displaying an image inside a link, the html option must be TRUE.
     $options['html'] = TRUE;
-    $output = \Drupal::l($output, $path, $options);
+    $output = Link::fromTextAndUrl($output, $path, $options)->toString();
   }
 
   $variables['image'] = $output;
