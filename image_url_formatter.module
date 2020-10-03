@@ -37,7 +37,7 @@ function image_url_formatter_theme() {
  */
 function template_preprocess_image_url_formatter(&$variables) {
   $item = $variables['item'];
-  $output = $item->entity->url();
+  $output = $item->entity->createFileUrl(FALSE);
   if ($variables['image_style']) {
     $image['style_name'] = $variables['image_style'];
     $output = ImageStyle::load($image['style_name'])->buildUrl($item->entity->getFileUri());
