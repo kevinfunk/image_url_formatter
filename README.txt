@@ -9,7 +9,7 @@ Usage
 then you can goto this bundle's manage display page,here at format column,
 you can choose "Image URL" instead of "Image".
 
-(2)When you add an iamge field in your views,
+(2)When you add an image field in your views,
 then you config the Formatter for this field,
  here you can choose "Image URL" instead of "Image".
 
