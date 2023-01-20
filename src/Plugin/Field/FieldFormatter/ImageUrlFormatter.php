@@ -233,7 +233,7 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
     foreach ($files as $delta => $file) {
       if (isset($link_file)) {
         $image_uri = $file->getFileUri();
-        $url = Url::fromUri(file_create_url($image_uri));
+        $url = \Drupal::service('file_url_generator')->generate($image_uri);
       }
       $cache_tags = Cache::mergeTags($cache_tags, $file->getCacheTags());
 

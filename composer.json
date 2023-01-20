@@ -1,0 +1,10 @@
+{
+    "name": "drupal/image_url_formatter",
+    "type": "drupal-module",
+    "description": "This module add a url formatter for image field. Then you can output image url directly.",
+    "homepage": "https://www.drupal.org/project/image_url_formatter",
+    "require": {
+        "php": "^7.4 || ^8.0 || ^8.1",
+        "drupal/core": "^9.0 || ^10.0"
+    }
+}
