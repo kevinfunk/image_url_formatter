@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface; 
 
 /**
  * Plugin implementation of the 'image_url_formatter'.
@@ -49,6 +50,13 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
   protected $imageStyleStorage;
 
   /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * Constructs an ImageFormatter object.
    *
    * @param string $plugin_id
@@ -69,12 +77,15 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
    *   The current user.
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The link generator service.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, LinkGeneratorInterface $link_generator, EntityStorageInterface $image_style_storage) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, LinkGeneratorInterface $link_generator, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator = NULL) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->currentUser = $current_user;
     $this->linkGenerator = $link_generator;
     $this->imageStyleStorage = $image_style_storage;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -91,7 +102,8 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
       $configuration['third_party_settings'],
       $container->get('current_user'),
       $container->get('link_generator'),
-      $container->get('entity_type.manager')->getStorage('image_style')
+      $container->get('entity_type.manager')->getStorage('image_style'),
+      $container->get('file_url_generator')
     );
   }
 
@@ -123,7 +135,6 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
     //$element['url_type'][0]['#description'] = $this->t("Like: 'http://example.com/sites/default/files/image.png'");
     //$element['url_type'][1]['#description'] = $this->t("With leading slash, no base URL, like: '/sites/default/files/image.png'");
     //$element['url_type'][2]['#description'] = $this->t("No base URL or leading slash, like: 'sites/default/files/image.png'");
-
     $image_styles = image_style_options(FALSE);
     $element['image_style'] = [
       '#title' => $this->t('Image style'),
@@ -233,7 +244,7 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
     foreach ($files as $delta => $file) {
       if (isset($link_file)) {
         $image_uri = $file->getFileUri();
-        $url = \Drupal::service('file_url_generator')->generate($image_uri);
+        $url = $this->fileUrlGenerator->generate($image_uri);
       }
       $cache_tags = Cache::mergeTags($cache_tags, $file->getCacheTags());
 
