@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Drupal\image_url_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -14,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\File\FileUrlGeneratorInterface; 
+use Drupal\Core\File\FileUrlGeneratorInterface;
 
 /**
  * Plugin implementation of the 'image_url_formatter'.
@@ -77,6 +76,8 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
    *   The current user.
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The link generator service.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
+   *   The image style storage.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
    */
@@ -126,15 +127,12 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
       '#title' => $this->t('URL type'),
       '#type' => 'select',
       '#options' => [
-	    0 => $this->t('Full URL'),
+        0 => $this->t('Full URL'),
         1 => $this->t('Absolute file path'),
         2 => $this->t('Relative file path'),
       ],
       '#default_value' => $this->getSetting('url_type'),
     ];
-    //$element['url_type'][0]['#description'] = $this->t("Like: 'http://example.com/sites/default/files/image.png'");
-    //$element['url_type'][1]['#description'] = $this->t("With leading slash, no base URL, like: '/sites/default/files/image.png'");
-    //$element['url_type'][2]['#description'] = $this->t("No base URL or leading slash, like: 'sites/default/files/image.png'");
     $image_styles = image_style_options(FALSE);
     $element['image_style'] = [
       '#title' => $this->t('Image style'),
@@ -213,12 +211,10 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
     $files = $this->getEntitiesToView($items, $langcode);
-
     // Early opt-out if the field is empty.
     if (empty($files)) {
       return $elements;
     }
-
     $url = NULL;
     $image_link_setting = $this->getSetting('image_link');
     // Check if the formatter involves a link.
@@ -231,7 +227,6 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
     elseif ($image_link_setting == 'file') {
       $link_file = TRUE;
     }
-
     $image_style_setting = $this->getSetting('image_style');
     $url_type_setting = $this->getSetting('url_type');
     // Collect cache tags to be added for each item in the field.
@@ -240,20 +235,17 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
       $image_style = $this->imageStyleStorage->load($image_style_setting);
       $cache_tags = $image_style->getCacheTags();
     }
-
     foreach ($files as $delta => $file) {
       if (isset($link_file)) {
         $image_uri = $file->getFileUri();
         $url = $this->fileUrlGenerator->generate($image_uri);
       }
       $cache_tags = Cache::mergeTags($cache_tags, $file->getCacheTags());
-
       // Extract field item attributes for the theme function, and unset them
       // from the $item so that the field template does not re-render them.
       $item = $file->_referringItem;
       $item_attributes = $item->_attributes;
       unset($item->_attributes);
-
       $elements[$delta] = [
         '#theme' => 'image_url_formatter',
         '#item' => $item,
