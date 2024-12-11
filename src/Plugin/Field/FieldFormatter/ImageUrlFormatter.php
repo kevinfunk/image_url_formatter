@@ -81,7 +81,7 @@ class ImageUrlFormatter extends ImageFormatterBase implements ContainerFactoryPl
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, LinkGeneratorInterface $link_generator, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator = NULL) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, LinkGeneratorInterface $link_generator, EntityStorageInterface $image_style_storage, ?FileUrlGeneratorInterface $file_url_generator = NULL) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->currentUser = $current_user;
     $this->linkGenerator = $link_generator;
