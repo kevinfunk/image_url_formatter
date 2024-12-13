@@ -13,10 +13,8 @@
  * @ingroup themeable
  */
 #}
-{% apply spaceless %}
-  {% if url %}
-    {{ url }}
-  {% else %}
-    {{ image }}
-  {% endif %}
-{% endapply %}
+{%- if url -%}
+  {{- url -}}
+{%- else -%}
+  {{- image -}}
+{%- endif -%}
