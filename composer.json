@@ -1,0 +1,8 @@
+{
+    "name": "drupal/image_url_formatter",
+    "description": "Add an URL formatter for image field.",
+    "type": "drupal-module",
+    "require": {
+        "drupal/core": "^10 || ^11"
+    },
+}
