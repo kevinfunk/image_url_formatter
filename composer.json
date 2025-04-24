@@ -4,5 +4,5 @@
     "type": "drupal-module",
     "require": {
         "drupal/core": "^10 || ^11"
-    },
+    }
 }
